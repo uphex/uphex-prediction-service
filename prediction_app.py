@@ -20,8 +20,10 @@ def hello():
         output = {"forecast": prediction, "low": low, "high": high}
 
         return flask.Response(json.dumps(output), content_type="application/json", status=200)
-    except(TypeError, IndexError):
-        return flask.Response("Couldn't generate prediction.", content_type="text/plain", status=500)
+    except(IndexError):
+        return flask.Response("Invalid data", content_type="text/plain", status=400)
+    except(TypeError):
+        return flask.Response("Couldn't generate prediction", content_type="text/plain", status=500)
 
 if __name__ == "__main__":
     app.run()
