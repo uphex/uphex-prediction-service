@@ -26,4 +26,4 @@ def hello():
         return flask.Response("Couldn't generate prediction", content_type="text/plain", status=500)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
