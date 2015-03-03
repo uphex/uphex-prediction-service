@@ -129,7 +129,7 @@ def autoarima(y):
 
     if first:
         #print('no best aic found')
-        return 0
+        return (0,0,0)
     else:
         #print('bestaic '+str(bestaic)+' bestkey '+str(bestkey))
         return bestkey
