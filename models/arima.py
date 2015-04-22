@@ -95,8 +95,8 @@ def fill_series(ser,i=None,j=None):
 
 
 def arima_aic(values,order):
-    #fit=ARIMA(values, order=order).fit(disp=False,skip_hessian=True,full_output=False)
-    fit=ARIMA(values, order=order).fit(disp = False, warn_convergence = False)
+    #fit=ARIMA(values, order=order).fit(method='mle',disp=False,skip_hessian=True,full_output=False)
+    fit=ARIMA(values, order=order).fit(method='mle',disp = False, warn_convergence = False)
     return fit.aic
 
 def autoarima(y):
@@ -144,7 +144,7 @@ def runarimaforecast(series,n,minrequired=4,lookback=2):
     #print(bestkey)
     if(bestkey!=0):
         maxpoint=max(series['point'])
-        model=ARIMA(series['value'], order=bestkey).fit(disp = False, warn_convergence = False)
+        model=ARIMA(series['value'], order=bestkey).fit(method='mle',disp = False, warn_convergence = False)
         predict_model=model.forecast(n)
         confidence_intervals=predict_model[2:len(predict_model)][0]
         #print('confidence_intervals')
