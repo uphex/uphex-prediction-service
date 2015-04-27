@@ -12,5 +12,3 @@ COPY . server
 WORKDIR server
 
 EXPOSE 5000
-
-ENTRYPOINT python2 prediction_app.py
