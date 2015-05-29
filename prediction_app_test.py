@@ -7,6 +7,11 @@ class FlaskrTestCase(unittest.TestCase):
     def setUp(self):
         self.app = prediction_app.app.test_client()
 
+    def test_ping(self):
+        response = self.app.get("/")
+        assert response.data == "ok"
+        assert response.status == "200 OK"
+
     def test_prediction(self):
         response = self.app.post("/", data="10 20 30 40 50 60")
         data = json.loads(response.data)

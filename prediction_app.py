@@ -4,9 +4,14 @@ import models.arima
 
 app = flask.Flask(__name__)
 
+@app.route("/", methods=["GET"])
+
+def ping():
+    return flask.Response("ok", content_type="text/plain", status=200)
+
 @app.route("/", methods=["POST"])
 
-def hello():
+def predict():
     app.debug = True
 
     input_values = [float(x) for x in flask.request.data.strip().split()]
