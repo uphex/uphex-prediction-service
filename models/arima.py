@@ -102,9 +102,9 @@ def arima_aic(values,order):
 def autoarima(y):
     #print('autoarima')
     aics={}
-    for i in range(0,3):
-        for j in range(0,3):
-            for k in range(0,3):
+    for i in [0,1,2]:
+        for j in [0,1]:
+            for k in [0,1,2]:
                 if(len(y)>(i+j+k)):
                     try:
                         aic=arima_aic(y,(i,j,k))
@@ -134,12 +134,15 @@ def autoarima(y):
         #print('bestaic '+str(bestaic)+' bestkey '+str(bestkey))
         return bestkey
 
-def runarimaforecast(series,n,minrequired=4,lookback=2):
+def runarimaforecast(series,n,minrequired=4,lookback=21):
     if len(series['value'])<minrequired:
         return series
     #print("series")
     #print(series)
-    bestkey=autoarima(series['value'])
+    vals=series['value']
+    j=len(vals)
+    i=max(j-lookback,0)
+    bestkey=autoarima(vals[i:j])
     #print("bestkey")
     #print(bestkey)
     if(bestkey!=0):
