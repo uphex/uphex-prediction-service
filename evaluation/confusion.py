@@ -46,13 +46,20 @@ def metrics_confusion_matrix(confusionh):
 		if(predicted=='Yes'):
 			if(predicted==actual): hit_rate_num+=value
 			hit_rate_denom+=value
-		# print predicted+' '+actual+' '+str(value)
+		if(predicted=='Yes' and actual=='Yes'): string='TRUE POSITIVE (YY)'
+		elif(predicted=='No' and actual=='No'): string='TRUE NEGATIVE (NN)'
+		elif(predicted=='No' and actual=='Yes'): string='FALSE NEGATIVE (NY)'
+		elif(predicted=='Yes' and actual=='No'): string='FALSE POSITIVE (YN)'
+		else: string="I DONT KNOW"
+		print string+' '+str(value)
 	accuracy_rate=float(accuracy_rate_num)/accuracy_rate_denom if accuracy_rate_denom!=0 else 0
 	hit_rate=float(hit_rate_num)/hit_rate_denom if hit_rate_denom!=0 else 0
+	bet_rate=float(hit_rate_denom)/accuracy_rate_denom if accuracy_rate_denom!=0 else 0
 	print
 	print 'acuracy rate '+str(accuracy_rate)
 	print 'hit rate '+str(hit_rate)
-	return(accuracy_rate,hit_rate)
+	print 'bet rate '+str(bet_rate)
+	return(accuracy_rate,hit_rate,bet_rate)
 
 def main():
 	if(len(sys.argv)!=2): sys.exit('run like this: python confusion.py observations.csv')
@@ -60,7 +67,7 @@ def main():
 	confusionh=fill_confusion_hash(keys)
 	file=sys.argv[1]
 	confusionh=read_and_fill_file(file,confusionh)
-	(accuracy_rate,hit_rate)=metrics_confusion_matrix(confusionh)
+	(accuracy_rate,hit_rate,bet_rate)=metrics_confusion_matrix(confusionh)
 
 if __name__ == '__main__':
 	main()
