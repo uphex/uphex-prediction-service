@@ -15,8 +15,10 @@ def read_and_fill_file(file,confusionh):
 	f=open(file,'rb')
 	for line in f:
 		if not header:
-			(channel,metric,time,observation,pred_value,pred_low,pred_high,anomalous,human)=line.strip().split(',')
+			# (channel,metric,time,observation,pred_value,pred_low,pred_high,anomalous,human)=line.strip().split(',')
+			(time,observation,pred_value,pred_high,pred_low,anomalous,human)=line.strip().split(',')
 			if(anomalous==''): anomalous='No' 
+			else: anomalous='Yes'
 			if(human==''): human='No'
 			if(human=='N'): human='No'
 			if(human=='A' or human=='Y'): human='Yes'
@@ -34,6 +36,7 @@ def metrics_confusion_matrix(confusionh):
 	accuracy_rate_denom=0
 	hit_rate_num=0
 	hit_rate_denom=0
+	actual_rate_num=0
 	
 	#loop through keys
 	for key in confusionh.iterkeys():
@@ -46,6 +49,8 @@ def metrics_confusion_matrix(confusionh):
 		if(predicted=='Yes'):
 			if(predicted==actual): hit_rate_num+=value
 			hit_rate_denom+=value
+		if(actual=='Yes'):
+			actual_rate_num+=value
 		if(predicted=='Yes' and actual=='Yes'): string='TRUE POSITIVE (YY)'
 		elif(predicted=='No' and actual=='No'): string='TRUE NEGATIVE (NN)'
 		elif(predicted=='No' and actual=='Yes'): string='FALSE NEGATIVE (NY)'
@@ -55,11 +60,13 @@ def metrics_confusion_matrix(confusionh):
 	accuracy_rate=float(accuracy_rate_num)/accuracy_rate_denom if accuracy_rate_denom!=0 else 0
 	hit_rate=float(hit_rate_num)/hit_rate_denom if hit_rate_denom!=0 else 0
 	bet_rate=float(hit_rate_denom)/accuracy_rate_denom if accuracy_rate_denom!=0 else 0
+	actual_bet_rate=float(actual_rate_num)/accuracy_rate_denom if accuracy_rate_denom!=0 else 0
 	print
 	print 'acuracy rate '+str(accuracy_rate)
 	print 'hit rate '+str(hit_rate)
 	print 'bet rate '+str(bet_rate)
-	return(accuracy_rate,hit_rate,bet_rate)
+	print 'actual_bet rate '+str(actual_bet_rate)
+	return(accuracy_rate,hit_rate,bet_rate,actual_bet_rate)
 
 def main():
 	if(len(sys.argv)!=2): sys.exit('run like this: python confusion.py observations.csv')
@@ -67,7 +74,7 @@ def main():
 	confusionh=fill_confusion_hash(keys)
 	file=sys.argv[1]
 	confusionh=read_and_fill_file(file,confusionh)
-	(accuracy_rate,hit_rate,bet_rate)=metrics_confusion_matrix(confusionh)
+	(accuracy_rate,hit_rate,bet_rate,actual_bet_rate)=metrics_confusion_matrix(confusionh)
 
 if __name__ == '__main__':
 	main()
