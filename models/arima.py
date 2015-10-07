@@ -134,7 +134,7 @@ def autoarima(y):
         #print('bestaic '+str(bestaic)+' bestkey '+str(bestkey))
         return bestkey
 
-def runarimaforecast(series,n,minrequired=4,lookback=21):
+def runarimaforecast(series,n,minrequired=4,lookback=21,confidence_interval_alpha=.01):
     if len(series['value'])<minrequired:
         return series
     #print("series")
@@ -148,7 +148,7 @@ def runarimaforecast(series,n,minrequired=4,lookback=21):
     if(bestkey!=0):
         maxpoint=max(series['point'])
         model=ARIMA(series['value'], order=bestkey).fit(method='mle',disp = False, warn_convergence = False)
-        predict_model=model.forecast(n)
+        predict_model=model.forecast(n,alpha=confidence_interval_alpha)
         confidence_intervals=predict_model[2:len(predict_model)][0]
         #print('confidence_intervals')
         #print(confidence_intervals)
