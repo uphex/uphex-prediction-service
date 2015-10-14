@@ -7,7 +7,7 @@ def stdev(lst):
 	return numpy.std(lst)
 
 def main():
-	size_set=50 #size of set to read
+	size_set=25 #size of set to read
 	filename=sys.argv[1] #filename to be read, passed as argv
 	outfilename=filename+".perfect" #outputfilename...cat perfect on end
 	ox=numpy.loadtxt(filename,delimiter=',',skiprows=1,usecols=(1,)) #read data
@@ -30,7 +30,13 @@ def main():
 		print(value)
 		outputset=1*((set>numpy.array(value))|(set<numpy.array(lowervalue))) #figure out if elements are greater than value obtained above
 		print(outputset)
-		outputtotal=numpy.append(outputtotal,outputset) #catenate the elements from previous iterations together
+		outputset2=1*(outputset==0) #set non-anomalies=1
+		set2=set*outputset2 #temp set
+		value2=median(set2[set2>0])+2.5*stdev(set[set2>0]) #value of set2
+                lowervalue2=median(set2[set2>0])-2.5*stdev(set2[set2>0]) #lowerval of set2
+	
+		fixedset=1*( (set>numpy.array(value)) | (set<numpy.array(lowervalue)) | (set>numpy.array(value2)) | (set<numpy.array(lowervalue2)) ) #anomalies of set and set2
+		outputtotal=numpy.append(outputtotal,fixedset) #catenate the elements from previous iterations together
 	print(outputtotal)
 	finaloutput=outputtotal[::-1] #reverse so we can get back in the right format
 	numpy.savetxt(outfilename,finaloutput) #output the file
