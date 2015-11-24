@@ -147,7 +147,10 @@ def runarimaforecast(series,n,minrequired=4,lookback=21,confidence_interval_alph
     #print(bestkey)
     if(bestkey!=0):
         maxpoint=max(series['point'])
-        model=ARIMA(series['value'], order=bestkey).fit(method='mle',disp = False, warn_convergence = False)
+		try: 
+			model=ARIMA(series['value'], order=bestkey).fit(method='mle',disp = False, warn_convergence = False)
+		except: 
+			model=ARIMA(series['value'], order=(0,0,0)).fit(method='mle',disp = False, warn_convergence = False)
         predict_model=model.forecast(n,alpha=confidence_interval_alpha)
         confidence_intervals=predict_model[2:len(predict_model)][0]
         #print('confidence_intervals')
